@@ -31,3 +31,9 @@ jobs:
           $cert = Get-ChildItem -Path Cert:\LocalMachine\My\ | Where-Object { $_.Subject -match "${{ vars.CERT_SUBJECT }}" } | Select-Object -First 1
           Get-ChildItem -Path hw.ps1 | ForEach-Object { Set-AuthenticodeSignature -FilePath $_.FullName -Certificate $cert }
         shell: powershell
+  
+      - name: upload ps1
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-scripts
+          path: hw.ps1
