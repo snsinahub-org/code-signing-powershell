@@ -37,3 +37,20 @@ jobs:
         with:
           name: signed-scripts
           path: hw.ps1
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.MY_PAT }}
+          commit-message: sign ps1 file
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: update-feature-${{ github.run_number }}
+          delete-branch: true
+          title: sign ps1 file
+          body: |
+            sign ps1 file
+          assignees: snsinahub
+          draft: false
