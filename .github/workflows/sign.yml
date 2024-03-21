@@ -20,6 +20,7 @@ jobs:
           [IO.File]::WriteAllBytes($pfxPath, $pfxBytes)
           Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $pfxPassword
         shell: powershell
+
       - name: List certificates
         run: |
           Get-ChildItem -Path Cert:\LocalMachine\My\
@@ -28,5 +29,6 @@ jobs:
       - name: Sign scripts
         run: |
           $cert = Get-ChildItem -Path Cert:\LocalMachine\My\ | Where-Object { $_.Subject -match "E=sina@snsina.com, CN=si na" } | Select-Object -First 1
+          echo $cert
           Get-ChildItem -Path hw.ps1 | ForEach-Object { Set-AuthenticodeSignature -FilePath $_.FullName -Certificate $cert }
         shell: powershell
