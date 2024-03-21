@@ -36,7 +36,7 @@ $pwd = ConvertTo-SecureString -String "CERT_PASSWORD" -Force -AsPlainText
 Export-PfxCertificate -cert $cert -FilePath "c:/cert.pfx" -Password $pwd
 
 # convert CFX to base64 string
-certContent = Get-Content -Path "c:/cert.pfx" -Encoding Byte
+$certContent = Get-Content -Path "c:/cert.pfx" -Encoding Byte
 $certBase64 = [Convert]::ToBase64String($certContent)
 
 # print certBase64
