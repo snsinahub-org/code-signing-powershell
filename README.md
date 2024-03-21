@@ -51,5 +51,5 @@ echo $certBase64
 
 The cert subject in this example is `CN=PowerShell Code Signing Cert`
 
-- CERT_SUBJECT
+- CERT_SUBJECT 
 
