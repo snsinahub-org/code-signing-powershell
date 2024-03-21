@@ -28,6 +28,6 @@ jobs:
         
       - name: Sign scripts
         run: |
-          $cert = Get-ChildItem -Path Cert:\LocalMachine\My\ | Where-Object { $_.Subject -match "E=sina@snsina.com, CN=si na" } | Select-Object -First 1
+          $cert = Get-ChildItem -Path Cert:\LocalMachine\My\ | Where-Object { $_.Subject -match "${{ vars.CERT_SUBJECT }}" } | Select-Object -First 1
           Get-ChildItem -Path hw.ps1 | ForEach-Object { Set-AuthenticodeSignature -FilePath $_.FullName -Certificate $cert }
         shell: powershell
