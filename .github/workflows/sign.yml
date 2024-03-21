@@ -1,0 +1,28 @@
+name: Sign PowerShell Scripts
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+   
+    - name: Decode and import PFX
+      run: |
+        $pfxPath = "cert.pfx"
+        $pfxBase64 = "${{ secrets.SELF_SIGNED_CERTIFICATE_B64 }}"
+        $pfxPassword = ConvertTo-SecureString -String "${{ secrets.PFX_PASSWORD }}" -Force -AsPlainText
+        $pfxBytes = [Convert]::FromBase64String($pfxBase64)
+        [IO.File]::WriteAllBytes($pfxPath, $pfxBytes)
+        Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $pfxPassword
+      shell: powershell
+
+    - name: Sign scripts
+      run: |
+        $cert = Get-ChildItem -Path Cert:\LocalMachine\My\ | Where-Object { $_.Subject -match "Your Certificate Subject" } | Select-Object -First 1
+        Get-ChildItem -Path hw.ps1 | ForEach-Object { Set-AuthenticodeSignature -FilePath $_.FullName -Certificate $cert }
+      shell: powershell
